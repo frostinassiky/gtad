@@ -1,5 +1,7 @@
 # G-TAD
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/g-tad-sub-graph-localization-for-temporal/action-detection-on-thumos14)](https://paperswithcode.com/sota/action-detection-on-thumos14?p=g-tad-sub-graph-localization-for-temporal)
+
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/g-tad-sub-graph-localization-for-temporal/temporal-action-localization-on-thumos14)](https://paperswithcode.com/sota/temporal-action-localization-on-thumos14?p=g-tad-sub-graph-localization-for-temporal)
+
 
 This repo holds the codes of paper: "G-TAD: Sub-Graph Localization for Temporal Action Detection", accepted in CVPR 2020.
 
