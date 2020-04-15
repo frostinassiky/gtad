@@ -1,10 +1,11 @@
 import sys
-import opts
 import numpy as np
 import pandas as pd
 import json
 import os
 from joblib import Parallel, delayed
+
+from gtad_lib import opts
 
 thumos_class = {
     7 : 'BaseballPitch',

@@ -1,13 +1,14 @@
-from dataset import VideoDataSet
-from loss_function import get_mask, subgraph_loss_func, node_loss_func
 import os
 import torch
 import torch.nn.parallel
 import torch.optim as optim
-import numpy as np
-import opts
-from models import GTAD
 from torch import autograd
+import numpy as np
+
+from gtad_lib import opts
+from gtad_lib.models import GTAD
+from gtad_lib.dataset import VideoDataSet
+from gtad_lib.loss_function import get_mask, subgraph_loss_func, node_loss_func
 
 
 ################## fix everything ##################

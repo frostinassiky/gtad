@@ -1,12 +1,12 @@
 import os
-import torch.nn.parallel
-import numpy as np
 import math
-import opts
-from models import GTAD
+import numpy as np
 import pandas as pd
+import torch.nn.parallel
 
-from dataset import VideoDataSet
+from gtad_lib import opts
+from gtad_lib.models import GTAD
+from gtad_lib.dataset import VideoDataSet
 
 if __name__ == '__main__':
     opt = opts.parse_opt()
