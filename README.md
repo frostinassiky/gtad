@@ -1,5 +1,8 @@
 # G-TAD
-The official implementation of G-TAD: Sub-Graph Localization for Temporal Action Detection
+This repo holds the codes of paper: "G-TAD: Sub-Graph Localization for Temporal Action Detection", accepted in CVPR 2020.
+
+
+![G-TAD Overview](./gtad_overview.png)
 
 ## Update
 30 Mar 2020: THUMOS14 feature is available! Gooogle Drive [Link](https://drive.google.com/drive/folders/10PGPMJ9JaTZ18uakPgl58nu7yuKo8M_k?usp=sharing).
