@@ -16,7 +16,7 @@ Temporal action detection is a fundamental yet challenging task in video underst
 
 ## Dependencies 
 * Python == 3.7
-* Pytorch==1.1.0
+* Pytorch==1.1.0 or 1.3.0
 * CUDA==10.0.130
 * CUDNN==7.5.1_0
 
@@ -25,7 +25,7 @@ Based on the idea of ROI Alignment from Mask-RCNN, we devoloped **SGAlign layer*
 
 1. Create conda environment
     ```shell script
-    conda create -f env.yml
+    conda env create -f env.yml
     ```
 2. Install `Align1D2.2.0` 
     ```shell script
