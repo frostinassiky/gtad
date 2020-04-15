@@ -59,6 +59,15 @@ or
 bash gtad_thumos.sh | tee log.txt
 ```
 
+If everything goes well, you can get the following result:
+```
+mAP at tIoU 0.3 is 0.5743240775909297
+mAP at tIoU 0.4 is 0.5123317998941541
+mAP at tIoU 0.5 is 0.42729380770272735
+mAP at tIoU 0.6 is 0.32689155596432284
+mAP at tIoU 0.7 is 0.22552633521505988
+```
+
 ## Bibtex
 Arxiv Version.
 ```text
