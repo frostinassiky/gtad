@@ -4,6 +4,8 @@ The official implementation of G-TAD: Sub-Graph Localization for Temporal Action
 ## Update
 30 Mar 2020: THUMOS14 feature is available! Gooogle Drive [Link](https://drive.google.com/drive/folders/10PGPMJ9JaTZ18uakPgl58nu7yuKo8M_k?usp=sharing).
 
+15 Apr 2020: THUMOS14 code is published! I update the post processing code so the experimental result is **slightly better** than the orignal paper!
+
 ## Overview
 Temporal action detection is a fundamental yet challenging task in video understanding. Video context is a critical cue to effectively detect actions, but current works mainly focus on temporal context, while neglecting semantic context as well as other important context properties. In this work, we propose a graph convolutional network (GCN) model to adaptively incorporate  multi-level semantic context into video features and cast temporal action detection as a sub-graph localization problem. Specifically, we formulate video snippets as graph nodes, snippet-snippet correlations as edges, and actions associated with context as target sub-graphs. With graph convolution as the basic operation, we design a GCN block called GCNeXt, which learns the features of each node by aggregating its context and dynamically updates the edges in the graph. To localize each sub-graph, we also design a SGAlign layer to embed each sub-graph into the Euclidean space. Extensive experiments show that G-TAD is capable of finding effective video context without extra supervision and achieves state-of-the-art performance on two detection benchmarks. On ActityNet-1.3, we obtain an average mAP of 34.09%; on THUMOS14, we obtain 40.16% in mAP@0.5, beating all the other one-stage methods.
 
@@ -16,13 +18,15 @@ Temporal action detection is a fundamental yet challenging task in video underst
 * CUDNN==7.5.1_0
 
 ## Installation
+Based on the idea of ROI Alignment from Mask-RCNN, we devoloped **SGAlign layer** in our implementation. You have to compile a short cuda code to run Algorithm 1 in our [paper](https://arxiv.org/abs/1911.11462). 
+
 1. Create conda environment
     ```shell script
     conda create -f env.yml
     ```
 2. Install `Align1D2.2.0` 
     ```shell script
-    cd lib
+    cd gtad_lib
     python setup.py install
     ```
 3. Test `Align1D2.2.0`
@@ -38,16 +42,20 @@ Temporal action detection is a fundamental yet challenging task in video underst
     └── ...
 
 ## Train and evaluation
+After downloading the dataset and setting up the envirionment, you can start from the following script.
+
 ```shell script
-python gtad.py --mode train
-python gtad.py --mode inference
-python gtad.py --mode detect
+python gtad_train.py
+python gtad_inference.py 
+python gtad_postprocessing.py --mode detect
 ```
 or
 ```shell script
-bash gtad.sh | tee log.txt
+bash gtad_thumos.sh | tee log.txt
 ```
+
 ## Bibtex
+Arxiv Version.
 ```text
 @misc{xu2019gtad,
     title={G-TAD: Sub-Graph Localization for Temporal Action Detection},
@@ -58,5 +66,15 @@ bash gtad.sh | tee log.txt
     primaryClass={cs.CV}
 }
 ```
+
+## Reference
+Those are very helpful and promising implementations for the temporal action localization task. My implementations borrow ideas from them.
+
+- BSN: Boundary Sensitive Network for Temporal Action Proposal Generation. [Paper](https://arxiv.org/abs/1806.02964) [Code](https://github.com/wzmsltw/BSN-boundary-sensitive-network)
+
+- BMN: BMN: Boundary-Matching Network for Temporal Action Proposal Generation. [Paper](https://arxiv.org/abs/1907.09702) [Code - PaddlePaddle](https://github.com/PaddlePaddle/models/tree/develop/PaddleCV/video/models/bmn) [Code PyTorch](https://github.com/JJBOY/BMN-Boundary-Matching-Network)
+
+- Graph Convolutional Networks for Temporal Action Localization. [Paper](http://openaccess.thecvf.com/content_ICCV_2019/papers/Zeng_Graph_Convolutional_Networks_for_Temporal_Action_Localization_ICCV_2019_paper.pdf) [Code](https://github.com/Alvin-Zeng/PGCN)
+
 ## Contact
 mengmeng.xu[at]kaust.edu.sa
