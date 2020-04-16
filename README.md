@@ -9,7 +9,9 @@ This repo holds the codes of paper: "G-TAD: Sub-Graph Localization for Temporal 
 ![G-TAD Overview](./gtad_overview.png)
 
 ## Update
-30 Mar 2020: THUMOS14 feature is available! Gooogle Drive [Link](https://drive.google.com/drive/folders/10PGPMJ9JaTZ18uakPgl58nu7yuKo8M_k?usp=sharing).
+30 Mar 2020: THUMOS14 feature is available! 
+[GooogleDrive](https://drive.google.com/drive/folders/10PGPMJ9JaTZ18uakPgl58nu7yuKo8M_k?usp=sharing),
+[OneDrive](https://kaust-my.sharepoint.com/:f:/g/personal/xum_kaust_edu_sa/EgTwwUGf0O1Kug_A6ym-y_8BlEJ04_xPME9EFbAAKRPQNw?e=AVgHlW)
 
 15 Apr 2020: THUMOS14 code is published! I update the post processing code so the experimental result is **slightly better** than the orignal paper!
 
