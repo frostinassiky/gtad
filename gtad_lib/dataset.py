@@ -104,16 +104,6 @@ class VideoDataSet(data.Dataset):  # thumos
         self.anchor_xmin = [self.temporal_gap * (i-0.5) for i in range(self.temporal_scale)]
         self.anchor_xmax = [self.temporal_gap * (i+0.5) for i in range(1, self.temporal_scale + 1)]
 
-
-    def _load_file(self, index):
-        video_name = self.video_list[index]
-        video_df = pd.read_csv(self.feature_path + "csv_mean_" + str(self.temporal_scale) + "/" + video_name + ".csv")
-        video_data = video_df.values[:, :]
-        video_data = torch.Tensor(video_data)
-        video_data = torch.transpose(video_data, 0, 1)
-        video_data.float()
-        return video_data
-
     def _get_train_label(self, index):
         # change the measurement from second to percentage
         # gt_bbox = []
