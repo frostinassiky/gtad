@@ -56,7 +56,7 @@ After downloading the dataset and setting up the envirionment, you can start fro
 ```shell script
 python gtad_train.py
 python gtad_inference.py 
-python gtad_postprocessing.py --mode detect
+python gtad_postprocessing.py
 ```
 or
 ```shell script
