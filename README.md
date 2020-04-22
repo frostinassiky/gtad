@@ -9,7 +9,7 @@ This repo holds the codes of paper: "G-TAD: Sub-Graph Localization for Temporal 
 ![G-TAD Overview](./gtad_overview.png)
 
 ## Update
-30 Mar 2020: THUMOS14 feature is available! 
+30 Mar 2020: THUMOS14 feature is available!
 [GooogleDrive](https://drive.google.com/drive/folders/10PGPMJ9JaTZ18uakPgl58nu7yuKo8M_k?usp=sharing),
 [OneDrive](https://kaust-my.sharepoint.com/:f:/g/personal/xum_kaust_edu_sa/EgTwwUGf0O1Kug_A6ym-y_8BlEJ04_xPME9EFbAAKRPQNw?e=AVgHlW)
 
@@ -20,20 +20,20 @@ Temporal action detection is a fundamental yet challenging task in video underst
 
 [Detail](https://sites.google.com/kaust.edu.sa/g-tad), [Video](https://www.youtube.com/watch?v=BlPxnDcykUo), [Arxiv](https://arxiv.org/abs/1911.11462).
 
-## Dependencies 
+## Dependencies
 * Python == 3.7
 * Pytorch==1.1.0 or 1.3.0
 * CUDA==10.0.130
 * CUDNN==7.5.1_0
 
 ## Installation
-Based on the idea of ROI Alignment from Mask-RCNN, we devoloped **SGAlign layer** in our implementation. You have to compile a short cuda code to run Algorithm 1 in our [paper](https://arxiv.org/abs/1911.11462). 
+Based on the idea of ROI Alignment from Mask-RCNN, we devoloped **SGAlign layer** in our implementation. You have to compile a short cuda code to run Algorithm 1 in our [paper](https://arxiv.org/abs/1911.11462).
 
 1. Create conda environment
     ```shell script
     conda env create -f env.yml
     ```
-2. Install `Align1D2.2.0` 
+2. Install `Align1D2.2.0`
     ```shell script
     cd gtad_lib
     python setup.py install
@@ -42,6 +42,27 @@ Based on the idea of ROI Alignment from Mask-RCNN, we devoloped **SGAlign layer*
     ```shell script
     python align.py
     ```
+
+### Data setup
+
+To reproduce the results in THUMOS14 without further changes:
+
+1. Download the data from [GooogleDrive](https://drive.google.com/drive/folders/10PGPMJ9JaTZ18uakPgl58nu7yuKo8M_k?usp=sharing) or
+[OneDrive](https://kaust-my.sharepoint.com/:f:/g/personal/xum_kaust_edu_sa/EgTwwUGf0O1Kug_A6ym-y_8BlEJ04_xPME9EFbAAKRPQNw?e=AVgHlW).
+
+2. Place it into a folder named `TSN_pretrain_avepool_allfrms_hdf5` inside `data/thumos_feature`.
+
+    gtad
+    |── data
+    |   ├── thumos_feature
+    |   |   |── TSN_pretrain_avepool_allfrms_hdf5
+    |   |   |   |── flow_test.h5
+    |   |   |   |── flow_val.h5
+    |   |   |   |── rgb_test.h5
+    |   |   |   |── rgb_val.h5
+
+> You could also pass the folder containing the HDF5 files if the script admits the following argument `--feature_path`.
+
 ## Code Architecture
 
     gtad                        # this repo
@@ -55,7 +76,7 @@ After downloading the dataset and setting up the envirionment, you can start fro
 
 ```shell script
 python gtad_train.py
-python gtad_inference.py 
+python gtad_inference.py
 python gtad_postprocessing.py
 ```
 or
