@@ -218,7 +218,8 @@ class VideoDataSet(data.Dataset):  # thumos
                                       for h5 in feature_h5s],
                                      axis=1)
 
-            df_snippet = [start_snippet + skip_videoframes * i for i in range(num_snippet)]
+            # df_snippet = [start_snippet + skip_videoframes * i for i in range(num_snippet)] 
+            df_snippet = [skip_videoframes * i for i in range(num_snippet)] 
             num_windows = int((num_snippet + stride - num_videoframes) / stride)
             windows_start = [i * stride for i in range(num_windows)]
             if num_snippet < num_videoframes:
