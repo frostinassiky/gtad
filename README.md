@@ -15,6 +15,9 @@ This repo holds the codes of paper: "[G-TAD: Sub-Graph Localization for Temporal
 
 15 Apr 2020: THUMOS14 code is published! I update the post processing code so the experimental result is **slightly better** than the orignal paper!
 
+
+29 Apr 2020: We updated our code based on @Phoenix1327's comment. The experimental result is **slightly better**. Please see details in this [issue](https://github.com/Frostinassiky/gtad/issues/4).
+
 ## Overview
 Temporal action detection is a fundamental yet challenging task in video understanding. Video context is a critical cue to effectively detect actions, but current works mainly focus on temporal context, while neglecting semantic context as well as other important context properties. In this work, we propose a graph convolutional network (GCN) model to adaptively incorporate  multi-level semantic context into video features and cast temporal action detection as a sub-graph localization problem. Specifically, we formulate video snippets as graph nodes, snippet-snippet correlations as edges, and actions associated with context as target sub-graphs. With graph convolution as the basic operation, we design a GCN block called GCNeXt, which learns the features of each node by aggregating its context and dynamically updates the edges in the graph. To localize each sub-graph, we also design a SGAlign layer to embed each sub-graph into the Euclidean space. Extensive experiments show that G-TAD is capable of finding effective video context without extra supervision and achieves state-of-the-art performance on two detection benchmarks. On ActityNet-1.3, we obtain an average mAP of 34.09%; on THUMOS14, we obtain 40.16% in mAP@0.5, beating all the other one-stage methods.
 
@@ -86,11 +89,11 @@ bash gtad_thumos.sh | tee log.txt
 
 If everything goes well, you can get the following result:
 ```
-mAP at tIoU 0.3 is 0.5743240775909297
-mAP at tIoU 0.4 is 0.5123317998941541
-mAP at tIoU 0.5 is 0.42729380770272735
-mAP at tIoU 0.6 is 0.32689155596432284
-mAP at tIoU 0.7 is 0.22552633521505988
+mAP at tIoU 0.3 is 0.5731204387052588
+mAP at tIoU 0.4 is 0.5129888769308306
+mAP at tIoU 0.5 is 0.43043083034478025
+mAP at tIoU 0.6 is 0.32653130678508374
+mAP at tIoU 0.7 is 0.22806267480976325
 ```
 
 ## Bibtex
