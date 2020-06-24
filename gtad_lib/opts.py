@@ -105,6 +105,14 @@ def parse_opt():
         type=float,
         default=0.46)
 
+    # Override
+    # In principle it should override the cache. However, the logic is to
+    # always save a cache. Thus, the flag only prevents loading the cache 😂
+    parser.add_argument(
+        '--override', default=False, action='store_true',
+        help='Prevent use of cached data'
+    )
+
     args = parser.parse_args()
 
     return args
