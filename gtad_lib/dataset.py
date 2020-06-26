@@ -47,6 +47,9 @@ class VideoDataSet(data.Dataset):  # thumos
         self.video_info_path = opt["video_info"]
         self.video_anno_path = opt["video_anno"]
         self.feat_dim = opt['feat_dim']
+        # Assuming someone wont outsmart this by mutating the dict 😝.
+        # Consider to use YACS and FB code structure in the future.
+        self.cfg = opt
 
         #### THUMOS
         self.skip_videoframes = opt['skip_videoframes']
@@ -168,7 +171,7 @@ class VideoDataSet(data.Dataset):  # thumos
             len(video_name_list), self.mode)
                                        )
         print(saved_data_path)
-        if True and os.path.exists(saved_data_path):
+        if not self.cfg['override'] and os.path.exists(saved_data_path):
             print('Got saved data.')
             with open(saved_data_path, 'rb') as f:
                 self.data, self.durations = pickle.load(f)
