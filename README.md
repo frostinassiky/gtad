@@ -28,6 +28,7 @@ Temporal action detection is a fundamental yet challenging task in video underst
 * Pytorch==1.1.0 or 1.3.0
 * CUDA==10.0.130
 * CUDNN==7.5.1_0
+* GCC >= 4.9
 
 ## Installation
 Based on the idea of ROI Alignment from Mask-RCNN, we devoloped **SGAlign layer** in our implementation. You have to compile a short cuda code to run Algorithm 1 in our [paper](https://arxiv.org/abs/1911.11462).
@@ -55,14 +56,6 @@ To reproduce the results in THUMOS14 without further changes:
 
 2. Place it into a folder named `TSN_pretrain_avepool_allfrms_hdf5` inside `data/thumos_feature`.
 
-    gtad
-    |── data
-    |   ├── thumos_feature
-    |   |   |── TSN_pretrain_avepool_allfrms_hdf5
-    |   |   |   |── flow_test.h5
-    |   |   |   |── flow_val.h5
-    |   |   |   |── rgb_test.h5
-    |   |   |   |── rgb_val.h5
 
 > You could also pass the folder containing the HDF5 files if the script admits the following argument `--feature_path`.
 
