@@ -36,6 +36,7 @@ Based on the idea of ROI Alignment from Mask-RCNN, we devoloped **SGAlign layer*
 1. Create conda environment
     ```shell script
     conda env create -f env.yml
+    source activate gtad
     ```
 2. Install `Align1D2.2.0`
     ```shell script
