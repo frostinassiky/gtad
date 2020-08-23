@@ -91,15 +91,14 @@ mAP at tIoU 0.7 is 0.22806267480976325
 ```
 
 ## Bibtex
-Arxiv Version.
+CVPR Version.
 ```text
-@misc{xu2019gtad,
-    title={G-TAD: Sub-Graph Localization for Temporal Action Detection},
-    author={Mengmeng Xu and Chen Zhao and David S. Rojas and Ali Thabet and Bernard Ghanem},
-    year={2019},
-    eprint={1911.11462},
-    archivePrefix={arXiv},
-    primaryClass={cs.CV}
+@InProceedings{xu2020gtad,
+author = {Xu, Mengmeng and Zhao, Chen and Rojas, David S. and Thabet, Ali and Ghanem, Bernard},
+title = {G-TAD: Sub-Graph Localization for Temporal Action Detection},
+booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {June},
+year = {2020}
 }
 ```
 
