@@ -72,7 +72,7 @@ if __name__ == "__main__":
     layer = Align1DLayer(10)
     # layer = torch.nn.DataParallel(layer, device_ids=[0,1])
     input = torch.tensor([[[1.,2,3,4,5,6,7,8,9,10],[11,12,13,14,15,16,17,18,19,20]]]).cuda()
-    proposal = torch.tensor([[0,-0.5,9.5],[0,0.1,0.9]]).cuda()
+    proposal = torch.tensor([[0,-0.5,9.5],[0,0.1,0.9],[0,5,5]]).cuda()
     output = layer(input, proposal)
     print("output has shape {}, with mean {}".format(output.shape, torch.mean(output)))
     print(output)

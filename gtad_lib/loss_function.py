@@ -1,63 +1,24 @@
 # -*- coding: utf-8 -*-
-# loss function is adopted from https://github.com/JJBOY/BMN-Boundary-Matching-Network
 import torch
 import numpy as np
 import torch.nn.functional as F
 
 
-def get_mask(tscale, duration=None, duration_min=None):
-    ''' make zeros for invalid anchors'''
-    duration = duration or tscale
-    mask = []
+def get_mask(tscale):
+    bm_mask = []
     for idx in range(tscale):
-        # for each start localtion, onlly top (tscale - idx) ] are valid
-        mask.append([1 for i in range(tscale - idx) ] + [0 for i in range(idx)])
-    mask = np.array(mask, dtype=np.float32)
-    if duration: # chunk mask by max duration
-        mask = mask[:duration,:]
-    if duration_min: # remove shot actions
-        mask[:duration_min] = 0
-    return torch.Tensor(mask)
+        mask_vector = [1 for i in range(tscale - idx)
+                       ] + [0 for i in range(idx)]
+        bm_mask.append(mask_vector)
+    bm_mask = np.array(bm_mask, dtype=np.float32)
+    return torch.Tensor(bm_mask)
 
 
-def subgraph_loss_func(pred_bm, gt_iou_map, bm_mask, lambda1=10):
-    pred_bm_wcs = pred_bm[:, 0].contiguous()
-    pred_bm_mse = pred_bm[:, 1].contiguous()
-
-    wce_loss = pem_reg_loss_func(pred_bm_wcs, gt_iou_map, bm_mask)
-    mse_loss = pem_cls_loss_func(pred_bm_mse, gt_iou_map, bm_mask)
-
-    subgraph_loss = wce_loss + lambda1* mse_loss
-    return subgraph_loss
-
-def node_loss_func(pred_start, pred_end, gt_start, gt_end):
-    def bi_loss(pred_score, gt_label):
-        pred_score = pred_score.view(-1)
-        gt_label = gt_label.view(-1)
-        pmask = (gt_label > 0.5).float()
-        num_entries = len(pmask)
-        num_positive = torch.sum(pmask)
-        ratio = num_entries / num_positive
-        coef_0 = 0.5 * ratio / (ratio - 1)
-        coef_1 = 0.5 * ratio
-        epsilon = 0.000001
-        loss_pos = coef_1 * torch.log(pred_score + epsilon) * pmask
-        loss_neg = coef_0 * torch.log(1.0 - pred_score + epsilon)*(1.0 - pmask)
-        loss = -1 * torch.mean(loss_pos + loss_neg)
-        return loss
-
-    loss_start = bi_loss(pred_start, gt_start)
-    loss_end = bi_loss(pred_end, gt_end)
-    loss = loss_start + loss_end
-    return loss
-
-########################################################################################
-
-def bmn_loss_func(pred_bm, pred_start, pred_end, gt_iou_map, gt_start, gt_end, bm_mask):
+def gtad_loss_func(pred_bm, pred_start, pred_end, gt_iou_map, gt_start, gt_end, bm_mask):
     pred_bm_reg = pred_bm[:, 0].contiguous()
     pred_bm_cls = pred_bm[:, 1].contiguous()
 
-    gt_iou_map = gt_iou_map * bm_mask
+    gt_iou_map = gt_iou_map.cuda() * bm_mask
 
     pem_reg_loss = pem_reg_loss_func(pred_bm_reg, gt_iou_map, bm_mask)
     pem_cls_loss = pem_cls_loss_func(pred_bm_cls, gt_iou_map, bm_mask)
@@ -71,7 +32,7 @@ def tem_loss_func(pred_start, pred_end, gt_start, gt_end):
     def bi_loss(pred_score, gt_label):
         pred_score = pred_score.view(-1)
         gt_label = gt_label.view(-1)
-        pmask = (gt_label > 0.5).float()
+        pmask = (gt_label > 0.5).float().cuda()
         num_entries = len(pmask)
         num_positive = torch.sum(pmask)
         ratio = num_entries / num_positive
@@ -110,13 +71,11 @@ def pem_reg_loss_func(pred_score, gt_iou_map, mask):
     u_slmask = u_lmask * u_slmask
     u_slmask = (u_slmask > (1. - r_l)).float()
 
-    weights = (u_hmask + u_smmask + u_slmask).detach()
+    weights = u_hmask + u_smmask + u_slmask
     
-    loss = F.mse_loss(pred_score * weights, gt_iou_map * weights)
-
+    loss = F.mse_loss(pred_score* weights, gt_iou_map* weights)
     loss = 0.5 * torch.sum(loss*torch.ones(*weights.shape).cuda()) / torch.sum(weights)
-    if loss != loss:
-        print('???')
+
 
     return loss
 
@@ -127,8 +86,8 @@ def pem_cls_loss_func(pred_score, gt_iou_map, mask):
     nmask = (gt_iou_map <= 0.9).float()
     nmask = nmask * mask
 
-    num_positive = 10 + torch.sum(pmask) # in case of nan
-    num_entries = 10 + num_positive + torch.sum(nmask)
+    num_positive = torch.sum(pmask)
+    num_entries = num_positive + torch.sum(nmask)
     ratio = num_entries / num_positive
     coef_0 = 0.5 * ratio / (ratio - 1)
     coef_1 = 0.5 * ratio
@@ -136,5 +95,4 @@ def pem_cls_loss_func(pred_score, gt_iou_map, mask):
     loss_pos = coef_1 * torch.log(pred_score + epsilon) * pmask
     loss_neg = coef_0 * torch.log(1.0 - pred_score + epsilon) * nmask
     loss = -1 * torch.sum(loss_pos + loss_neg) / num_entries
-
     return loss

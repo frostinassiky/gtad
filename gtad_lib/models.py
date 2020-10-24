@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+import math
 import numpy as np
 import torch
 import torch.nn as nn
 from gtad_lib.align import Align1DLayer
+
 
 # dynamic graph from knn
 def knn(x, y=None, k=10):
@@ -113,32 +115,29 @@ class GraphAlign(nn.Module):
         self.bs = bs
         self.style = style
         self.expand_ratio = 0.5
-        self.resolution = 16
+        self.resolution = 32
         self.align_inner = Align1DLayer(self.resolution, samp)
-        self.align_context = Align1DLayer(16,samp)
+        self.align_context = Align1DLayer(4)
         self._get_anchors()
 
     def forward(self, x, index):
         bs, ch, t = x.shape
-        # print('feature channel is', ch)
         if not self.anchors.is_cuda:  # run once
             self.anchors = self.anchors.cuda()
 
         anchor = self.anchors[:self.anchor_num * bs, :]  # (bs*tscale*tscal, 3)
         # print('first value in anchor is', anchor[0])
         feat_inner = self.align_inner(x, anchor)  # (bs*tscale*tscal, ch, resolution)
-        #print('inner feature is with shape', feat_inner.shape)
         if self.style == 1: # use last layer neighbours
             feat, _ = get_graph_feature(x, k=self.k, style=2)  # (bs,ch,100) -> (bs, ch, 100, k)
             feat = feat.mean(dim=-1, keepdim=False)  # (bs. 2*ch, 100)
             feat_context = self.align_context(feat, anchor)  # (bs*tscale*tscal, ch, resolution//2)
-            feat = torch.cat((feat_inner,feat_context), dim=2).view(bs, t, self.d, -1)
-            # print('sg feature is with shape', feat.shape)
+            feat = torch.cat((feat_inner,feat_context), dim=2).view(bs, t, t, -1)
         elif self.style == 2: # use all layers neighbour
             feat, _ = get_graph_feature(x, k=self.k, style=2, idx_knn=index)  # (bs,ch,100) -> (bs, ch, 100, k)
             feat = feat.mean(dim=-1, keepdim=False)  # (bs. 2*ch, 100)
             feat_context = self.align_context(feat, anchor)  # (bs*tscale*tscal, ch, resolution//2)
-            feat = torch.cat((feat_inner,feat_context), dim=2).view(bs, t, self.d, -1)
+            feat = torch.cat((feat_inner,feat_context), dim=2).view(bs, t, t, -1)
         else:
             feat = torch.cat((feat_inner,), dim=2).view(bs, t, t, -1)
         # print('shape after align is', feat_context.shape)
@@ -170,11 +169,11 @@ class GTAD(nn.Module):
         self.tscale = opt["temporal_scale"]
         self.feat_dim = opt["feat_dim"]
         self.bs = opt["batch_size"]
-        self.h_dim_1d = 256
-        self.h_dim_2d = 128
-        self.h_dim_3d = 512
+        self.h_dim_1d = opt["h_dim_1d"]
+        self.h_dim_2d = opt["h_dim_2d"]
+        self.h_dim_3d = opt["h_dim_3d"]
         self.goi_style = opt['goi_style']
-        self.h_dim_goi = self.h_dim_1d*(16,32,32)[opt['goi_style']]
+        self.h_dim_goi = self.h_dim_1d*(32,32+4,32+4)[opt['goi_style']]
         self.idx_list = []
 
         # Backbone Part 1
@@ -214,11 +213,13 @@ class GTAD(nn.Module):
             nn.Conv2d(self.h_dim_2d, 2, kernel_size=1), nn.Sigmoid()
         )
 
-        # Position encoding (not used)
-        self.pos = torch.arange(0, 1, 1.0 / self.tscale).view(1, 1, self.tscale)
+        # Position encoding (not useful)
+        # self.pos = torch.arange(0, 1, 1.0 / self.tscale).view(1, 1, self.tscale)
+        # self.pos = PositionalEncoding(self.feat_dim, dropout=0.1, max_len=self.tscale)
 
     def forward(self, snip_feature):
         del self.idx_list[:]  # clean the idx list
+        # snip_feature = self.pos(snip_feature)
         base_feature = self.backbone1(snip_feature).contiguous()  # (bs, 2048, 256) -> (bs, 256, 256)
         gcnext_feature = self.backbone2(base_feature)  #
 
@@ -237,7 +238,7 @@ class GTAD(nn.Module):
 
 
 if __name__ == '__main__':
-    import opts
+    from gtad_lib import opts
     from torchsummary import summary
     opt = opts.parse_opt()
     opt = vars(opt)
@@ -248,6 +249,7 @@ if __name__ == '__main__':
     # print(a.shape, b.shape, c.shape)
 
     summary(model, (400,100))
+
     '''
     Total params: 9,495,428
     Trainable params: 9,495,428

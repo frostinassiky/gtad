@@ -7,11 +7,12 @@ def parse_opt():
     parser.add_argument(
         '--training_lr',
         type=float,
-        default=0.00004)
+        default=0.004)
     parser.add_argument(
         '--weight_decay',
         type=float,
         default=1e-4)
+
     parser.add_argument(
         '--train_epochs',
         type=int,
@@ -19,7 +20,7 @@ def parse_opt():
     parser.add_argument(
         '--batch_size',
         type=int,
-        default=8)
+        default=16)
     parser.add_argument(
         '--step_size',
         type=int,
@@ -33,85 +34,85 @@ def parse_opt():
         '--n_gpu',
         type=int,
         default=2)
-    parser.add_argument(
-        '--n_cpu',
-        type=int,
-        default=8)
-
     # output settings
-    parser.add_argument('--subset', type=str, default='validation')
-    parser.add_argument('--output', type=str, default="./output/default")
-    # dataset settings
+    parser.add_argument('--eval', type=str, default='validation')
+    parser.add_argument('--output', type=str, default="./output")
+    # Overall Dataset settings
     parser.add_argument(
         '--video_info',
         type=str,
-        default="./data/thumos_annotations/")
+        default="./data/activitynet_annotations/video_info_new.csv")
     parser.add_argument(
         '--video_anno',
         type=str,
-        default="./data/thumos_annotations/")
+        default="./data/activitynet_annotations/anet_anno_action.json")
     parser.add_argument(
         '--temporal_scale',
         type=int,
-        default=256) # 100 for anet
+        default=100)
     parser.add_argument(
         '--feature_path',
         type=str,
-        #default="./data/thumos_feature/feature_anet_200")
-        #default="./data/thumos_feature/I3D")
-        default="./data/thumos_feature/TSN_pretrain_avepool_allfrms_hdf5")
+        default="./data/activitynet_feature_cuhk/csv_mean_100.hdf5")
 
     parser.add_argument(
         '--feat_dim',
         type=int,
-        default=2048)
-        #default=400)
-
-
-    # anchors
-    parser.add_argument('--max_duration', type=int, default=64)  # anet: 100 snippets
-    parser.add_argument('--min_duration', type=int, default=0)  # anet: 100 snippets
-
+        default=400) 
     parser.add_argument(
-        '--skip_videoframes',
+        '--h_dim_1d',
         type=int,
-        default=5,
-        help='the number of video frames to skip in between each one. using 1 means that there is no skip.'
-    )
-
-    # ablation experiments
+        default=256) 
     parser.add_argument(
-           '--goi_samp',
-           type=int,
-           default=0) # 0: sample all frame; 1: sample each output position
-    parser.add_argument(
-           '--goi_style',
-           type=int,
-           default=1)  # 0: no context, 1: last layer context, 2: all layer context
-
-    # localization branch
-    parser.add_argument(
-        '--kern_2d',
+        '--h_dim_2d',
         type=int,
-        default=3)
+        default=128) 
     parser.add_argument(
-        '--pad_2d',
+        '--h_dim_3d',
         type=int,
-        default=1)
+        default=512) 
 
-    # NMS
+    # Post processing
+    parser.add_argument(
+        '--post_process_thread',
+        type=int,
+        default=8)
     parser.add_argument(
         '--nms_thr',
         type=float,
-        default=0.46)
-
-    # Override
-    # In principle it should override the cache. However, the logic is to
-    # always save a cache. Thus, the flag only prevents loading the cache 😂
+        default=0.8)
     parser.add_argument(
-        '--override', default=False, action='store_true',
-        help='Prevent use of cached data'
-    )
+        '--result_file',
+        type=str,
+        default="result_proposal.json")
+    parser.add_argument(
+        '--save_fig_path',
+        type=str,
+        default="evaluation_result.pdf")
+
+    # anchors
+    parser.add_argument('--max_duration', type=int, default=100)  # anet: 100 snippets
+    parser.add_argument('--min_duration', type=int, default=0)  # anet: 100 snippets
+
+
+    # ablation settings
+
+    parser.add_argument(
+        '--goi_samp',
+        type=int,
+        default=0) # 0: sample all frame; 1: sample each output position
+    parser.add_argument(
+        '--goi_style',
+        type=int,
+        default=1)  # 0: no context, 1: last layer context, 2: all layer context
+    parser.add_argument(
+        '--kern_2d',
+        type=int,
+        default=1) # 3
+    parser.add_argument(
+        '--pad_2d',
+        type=int,
+        default=0) # 1
 
     args = parser.parse_args()
 
