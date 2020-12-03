@@ -12,7 +12,7 @@ This repo holds the codes of paper: "[G-TAD: Sub-Graph Localization for Temporal
 
 24 Nov 2020: to celebrate my 2nd anniversary with Sally, 
 I released the code for ActivityNet. :P  Please checkout the branch `anet` to see the details. 
-Feature: [GooogleDrive](https://drive.google.com/folderview?id=1ilLgmZYHG1rx0ADuzAkW8jeqdEDeZ19g),
+Feature: [GooogleDrive](https://drive.google.com/folderview?id=1ilLgmZYHG1rx0ADuzAkW8jeqdEDeZ19g), md5sum: `0ce54748883c4ce1cf6600f5ad04421b`.
 
 
 30 Mar 2020: THUMOS14 feature is available!
