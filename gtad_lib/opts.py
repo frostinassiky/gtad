@@ -20,7 +20,7 @@ def parse_opt():
     parser.add_argument(
         '--batch_size',
         type=int,
-        default=16)
+        default=32)
     parser.add_argument(
         '--step_size',
         type=int,
@@ -33,19 +33,15 @@ def parse_opt():
     parser.add_argument(
         '--n_gpu',
         type=int,
-        default=2)
+        default=6)
     # output settings
     parser.add_argument('--eval', type=str, default='validation')
     parser.add_argument('--output', type=str, default="./output")
     # Overall Dataset settings
     parser.add_argument(
-        '--video_info',
-        type=str,
-        default="./data/activitynet_annotations/video_info_new.csv")
-    parser.add_argument(
         '--video_anno',
         type=str,
-        default="./data/activitynet_annotations/anet_anno_action.json")
+        default="./data/hacs_annotations/HACS_segments_v1.1.1.json")
     parser.add_argument(
         '--temporal_scale',
         type=int,
@@ -53,12 +49,12 @@ def parse_opt():
     parser.add_argument(
         '--feature_path',
         type=str,
-        default="./data/activitynet_feature_cuhk/csv_mean_100.hdf5")
+        default="./data/hacs_feature_mit/csv_mean_100.hdf5")
 
     parser.add_argument(
         '--feat_dim',
         type=int,
-        default=400) 
+        default=2048) 
     parser.add_argument(
         '--h_dim_1d',
         type=int,

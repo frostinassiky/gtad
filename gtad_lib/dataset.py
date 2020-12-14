@@ -44,22 +44,28 @@ class VideoDataSet(data.Dataset):
         self.subset = subset
         self.mode = mode
         self.feature_path = opt["feature_path"]
-        self.video_info_path = opt["video_info"]
         self.video_anno_path = opt["video_anno"]
         self._getDatasetDict()
         self._get_match_map()
 
     def _getDatasetDict(self):
-        anno_df = pd.read_csv(self.video_info_path)
-        anno_database = load_json(self.video_anno_path)
+        anno = load_json(self.video_anno_path)
         self.video_dict = {}
-        for i in range(len(anno_df)):
-            video_name = anno_df.video.values[i]
-            video_info = anno_database[video_name]
-            video_subset = anno_df.subset.values[i]
+        class_list = []
+        anno_database = anno['database']
+
+        for vid in anno_database.keys():
+            video_name = 'v_'+vid
+            video_info = anno_database[vid]
+            video_subset = anno_database[vid]['subset']
+            if self.subset == "full":
+                self.video_dict[video_name] = video_info
             if self.subset in video_subset:
                 self.video_dict[video_name] = video_info
-        self.video_list = list(self.video_dict.keys())
+            for item in video_info['annotations']:
+                class_list.append(item['label'])
+
+        self.video_list = sorted(list(self.video_dict.keys()))
         print("%s subset video numbers: %d" % (self.subset, len(self.video_list)))
 
     def __getitem__(self, index):
@@ -89,6 +95,7 @@ class VideoDataSet(data.Dataset):
 
     def _load_file(self, index):
         video_name = self.video_list[index]
+        
         if self.feature_path[-1]=='/':  # h5 files are in seperated files
             if ',' in self.feature_path: # concatenation of two
                 feat = []
@@ -96,6 +103,9 @@ class VideoDataSet(data.Dataset):
                     with h5py.File(feature_path+video_name+'.h5', 'r') as f:
                         feat.append(f[video_name][:])
                 feat = np.concatenate(feat,axis=1)
+            elif 'I3D' in self.feature_path:
+                folder_dict = {'train': 'training', 'validation': 'validation'}
+                feat = np.load(self.feature_path+folder_dict[self.subset]+'/'+video_name[2:]+'.npy')
             else:
                 # print(video_name, 'not found!!!!!!!!!!!')
                 # feat = torch.randn((100,512))
@@ -104,7 +114,8 @@ class VideoDataSet(data.Dataset):
         else:
             with h5py.File(self.feature_path, 'r') as features_h5:
                 feat = features_h5[video_name][()]
-        # video_data = torch.randn((100,400))
+        
+        # video_data = torch.randn((100,2048))
         video_data = torch.Tensor(feat)
         video_data = torch.transpose(video_data, 0, 1)
         if video_data.shape[0]!=self.temporal_scale: # rescale to fixed shape
@@ -115,10 +126,10 @@ class VideoDataSet(data.Dataset):
     def _get_train_label(self, index, anchor_xmin, anchor_xmax):
         video_name = self.video_list[index]
         video_info = self.video_dict[video_name]
-        video_frame = video_info['duration_frame']
-        video_second = video_info['duration_second']
-        feature_frame = video_info['feature_frame']
-        corrected_second = float(feature_frame) / video_frame * video_second  # there are some frames not used
+        # video_frame = video_info['duration_frame']
+        # video_second = video_info['duration_second']
+        # feature_frame = video_info['feature_frame']
+        corrected_second = float(video_info['duration']) #float(feature_frame) / video_frame * video_second  # there are some frames not used
         video_labels = video_info['annotations']  # the measurement is second, not frame
 
         ##############################################################################################
