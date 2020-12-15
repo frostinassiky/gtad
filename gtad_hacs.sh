@@ -19,7 +19,7 @@ source activate /home/xum/miniconda3/envs/vlg
 
 set -ex
 
-lr=0.0002
+lr=0.0005
 echo "$(date "+%Y.%m.%d-%H.%M.%S")"
 python gtad_train.py --training_lr ${lr}
 python gtad_inference.py
