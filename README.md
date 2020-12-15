@@ -9,6 +9,7 @@ This repo holds the codes of paper: "[G-TAD: Sub-Graph Localization for Temporal
 ![G-TAD Overview](./gtad_overview.png)
 
 ## Update
+15 Dec 2020: I uploaded the configurations for HACS Segment dataset in the `hacs` branch. With the [officail I3D pretrained features](http://hacs.csail.mit.edu/challenge.html), G-TAD can reach 27.481 Average mAP without tuning the model architecture. 
 
 24 Nov 2020: to celebrate my 2nd anniversary with Sally, 
 I released the code for ActivityNet. :P  Please checkout the branch `anet` to see the details. 
